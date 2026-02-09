@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bal Mandal Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Bal Mandal Admin Dashboard</h1>
+
+<section class="card">
+<h2>Add Attendance</h2>
+<input type="date" id="date">
+<input type="number" id="count" placeholder="No. of Balaks">
+<button onclick="addAttendance()">Save Attendance</button>
+</section>
+
+<section class="card">
+<h2>Add New Balak</h2>
+<input type="text" id="balakName" placeholder="Balak Name">
+<button onclick="addBalak()">Add Balak</button>
+</section>
+
+<section class="card">
+<h2>Export Data</h2>
+<button onclick="exportAttendance()">Export Attendance</button>
+<button onclick="exportBalaks()">Export Balaks</button>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
