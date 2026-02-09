@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bal Mandal Admin</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: linear-gradient(120deg,#4facfe,#00f2fe);
+}
+
+header {
+    background: #222;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
+}
+
+.container {
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+input {
+    padding: 10px;
+    margin: 8px;
+    width: 200px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #4facfe;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #007bff;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background: #4facfe;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<header>Bal Mandal Admin Dashboard</header>
+
+<div class="container">
+
+<div class="card">
+<h2>Add Attendance</h2>
+<input type="date" id="date">
+<input type="number" id="count" placeholder="No. of Balaks">
+<button onclick="addAttendance()">Save Attendance</button>
+
+<table id="attendanceTable">
+<tr><th>Date</th><th>Attendance</th></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Add New Balak</h2>
+<input type="text" id="balakName" placeholder="Balak Name">
+<button onclick="addBalak()">Add Balak</button>
+
+<ul id="balakList"></ul>
+</div>
+
+<div class="card">
+<h2>Export Data</h2>
+<button onclick="exportAttendance()">Export Attendance CSV</button>
+<button onclick="exportBalaks()">Export Balaks CSV</button>
+</div>
+
+</div>
+
+<script>
+let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+let balaks = JSON.parse(localStorage.getItem("balaks")) || [];
+
+function refreshTables() {
+    let table = document.getElementById("attendanceTable");
+    table.innerHTML = "<tr><th>Date</th><th>Attendance</th></tr>";
+
+    attendance.forEach(a => {
+        table.innerHTML += `<tr><td>${a.date}</td><td>${a.count}</td></tr>`;
+    });
+
+    let list = document.getElementById("balakList");
+    list.innerHTML = "";
+    balaks.forEach(b => {
+        list.innerHTML += `<li>${b}</li>`;
+    });
+}
+
+function addAttendance() {
+    let date = document.getElementById("date").value;
+    let count = document.getElementById("count").value;
+
+    if (!date || !count) return alert("Enter all details");
+
+    attendance.push({ date, count });
+    localStorage.setItem("attendance", JSON.stringify(attendance));
+    refreshTables();
+}
+
+function addBalak() {
+    let name = document.getElementById("balakName").value;
+
+    if (!name) return alert("Enter name");
+
+    balaks.push(name);
+    localStorage.setItem("balaks", JSON.stringify(balaks));
+    refreshTables();
+}
+
+function exportAttendance() {
+    let csv = "Date,Attendance\n";
+    attendance.forEach(a => {
+        csv += `${a.date},${a.count}\n`;
+    });
+    download(csv, "attendance.csv");
+}
+
+function exportBalaks() {
+    let csv = "Balak Name\n";
+    balaks.forEach(b => {
+        csv += `${b}\n`;
+    });
+    download(csv, "balaks.csv");
+}
+
+function download(data, filename) {
+    let blob = new Blob([data]);
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+}
+
+refreshTables();
+</script>
+
+</body>
+</html>
